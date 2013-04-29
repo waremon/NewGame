@@ -32,18 +32,6 @@ function makeSelect(text, y) {
 	return label;
 }
 
-Array.prototype.shuffle = function() {
-    var i = this.length;
-    while (i) {
-        var j = Math.floor(Math.random() * i);
-        var t = this[--i];
-        this[i] = this[j];
-        this[j] = t;
-    }
-    return this;
-}
-
-
 window.onload = function() {
 	var game = new Game(width, height);
 	game.preload('cards.png', 'gray_back.png');
@@ -96,6 +84,11 @@ window.onload = function() {
 		for (var i = 0; i < 52; i++) {
 			card_array[i] = i;
 		}
+		card_array.sort(
+			    function() {
+			        return Math.random() - 0.5;
+			    }
+			);
 		var card_array_index = 0;
 
 		for (var i = 0; i < CardNum; i++) {
