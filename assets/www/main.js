@@ -12,7 +12,7 @@ Card = enchant.Class.create(Sprite, {
 	initialize: function() {
 		var game = enchant.Game.instance;
 		Sprite.call(this, width/4, height/5);
-		this.image = game.assets['card.png'];
+		this.image = game.assets['cards.png'];
 		this.who;
 		this.addEventListener('touchstart', function() {
 				touched_card = this.who;
@@ -32,9 +32,21 @@ function makeSelect(text, y) {
 	return label;
 }
 
+Array.prototype.shuffle = function() {
+    var i = this.length;
+    while (i) {
+        var j = Math.floor(Math.random() * i);
+        var t = this[--i];
+        this[i] = this[j];
+        this[j] = t;
+    }
+    return this;
+}
+
+
 window.onload = function() {
 	var game = new Game(width, height);
-	game.preload('card.png', 'gray_back.png');
+	game.preload('cards.png', 'gray_back.png');
 	game.onload = function() {
 		game.pushScene(game.topScene());
 	};
@@ -80,12 +92,19 @@ window.onload = function() {
 		
 		var card = new Array(CardNum);
 		var mycard = new Array(MyCardNum);
+		var card_array = new Array(52);
+		for (var i = 0; i < 52; i++) {
+			card_array[i] = i;
+		}
+		var card_array_index = 0;
 
 		for (var i = 0; i < CardNum; i++) {
 			card[i] = new Card();
 			card[i].x = width / Math.sqrt(CardNum) * (i % Math.sqrt(CardNum));
 			card[i].y = height*(4/5) / Math.sqrt(CardNum) * Math.floor(i / Math.sqrt(CardNum));
 			card[i].who = i;
+			card[i].frame = card_array[card_array_index];
+			card_array_index ++;
 			scene.addChild(card[i]);
 		}
 		for (var i = 0; i < MyCardNum; i++) {
@@ -94,6 +113,8 @@ window.onload = function() {
 			mycard[i].y = height*(4/5);
 			mycard[i].scaleX *= (4/5);
 			mycard[i].who = i+100;
+			mycard[i].frame = card_array[card_array_index];
+			card_array_index ++;
 			scene.addChild(mycard[i]);
 		}
 		
@@ -115,7 +136,7 @@ window.onload = function() {
 		});
 		
 		scene.addEventListener('enterframe', function() {
-			if(touched_card > 100) {
+			if(touched_card >= 100) {
 				mycard[touched_card-100].x = touchX - mycard[touched_card-100].width/2;
 				mycard[touched_card-100].y = touchY - mycard[touched_card-100].height/2;
 			}
