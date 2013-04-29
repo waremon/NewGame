@@ -18,6 +18,7 @@ Card = enchant.Class.create(Sprite, {
 				touched_card = this.who;
 				initX = this.x;
 				initY = this.y;
+				this.scaleX = 1;
 		});
 	}
 });
@@ -105,13 +106,16 @@ window.onload = function() {
 				touchY = e.y;
 		});
 		scene.addEventListener('touchend', function(e) {
-			mycard[touched_card-100].x = initX;
-			mycard[touched_card-100].y = initY;
-			touched_card = -1;
+			if(touched_card >= 100) {
+				mycard[touched_card-100].x = initX;
+				mycard[touched_card-100].y = initY;
+				mycard[touched_card-100].scaleX = (4/5);
+				touched_card = -1;
+			}
 		});
 		
 		scene.addEventListener('enterframe', function() {
-			if(touched_card != -1) {
+			if(touched_card > 100) {
 				mycard[touched_card-100].x = touchX - mycard[touched_card-100].width/2;
 				mycard[touched_card-100].y = touchY - mycard[touched_card-100].height/2;
 			}
